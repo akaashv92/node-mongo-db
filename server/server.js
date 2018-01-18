@@ -1,4 +1,4 @@
-require('./config/config.js');
+  require('./config/config.js');
 var {ObjectID} = require('mongodb');
 
 const _ = require('lodash');
@@ -115,7 +115,20 @@ app.post('/users', (req, res) => {
 
 app.get('/users/me', authenticate, (req,res) => {
 res.send(req.user.toJson());
+});
 
+app.post('/users/login', (req,res) => {
+  var body = _.pick(req.body, ['email','password']);
+
+    User.findByCredentials(body.email,body.password).then((user) => {
+      //res.send(user.toJson());
+      return user.generateAuthToken().then((token) =>{
+        res.header('x-auth',token).send(user.toJson());
+      });
+    }).catch((e) => {
+      res.status(400).send();
+    })
+//  res.send(body);
 });
 
 
