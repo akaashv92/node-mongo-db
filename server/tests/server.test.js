@@ -306,8 +306,15 @@ describe('POST /users/login', () => {
       }
 
       User.findById(users[1]._id).then((user) => {
-        expect(user.tokens[1].access).toBe('auth');
-        expect(user.tokens[1].token).toBe(res.header['x-auth']);
+        //from tutorial
+        expect(user.toObject().tokens[1]).toMatchObject({
+          access : 'auth',
+          token : res.header['x-auth']
+        });
+
+          //your idea
+        //expect(user.tokens[1].access).toBe('auth');
+        //expect(user.tokens[1].token).toBe(res.header['x-auth']);
         done();
       }).catch((e) => {
         done(e);
